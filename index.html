@@ -77,7 +77,7 @@
 
   /* ---------- Layout shell ---------- */
   .shell{max-width:1180px; margin:0 auto; padding:0 20px;}
-  header.site{ background:var(--forest-dark); color:#EFF3E8; }
+  header.site{ background:var(--forest-dark); color:#EFF3E8; padding-top:env(safe-area-inset-top); }
   .topbar{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 0; }
   .brand{ display:flex; align-items:center; gap:12px; }
   .brand-mark{
@@ -571,7 +571,7 @@
    แก้ค่านี้เป็น Web App URL จริงของคุณ เมื่อนำไฟล์นี้ไปโฮสต์จริง
    (ผู้ใช้ยังสามารถเปลี่ยนชั่วคราวผ่านปุ่ม ⚙ ที่มุมขวาบนได้ด้วย)
    ============================================================ */
-let DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyIcbQtiPewSUtDZPYk8F68-B7IeboJ13KjZqeHNvPj_wsz-Dv_dR8O3hTSfE6gheT4/exec'; // <-- ใส่ Web App URL ตรงนี้ เช่น 'https://script.google.com/macros/s/XXXX/exec'
+let DEFAULT_API_URL = ''; // <-- ใส่ Web App URL ตรงนี้ เช่น 'https://script.google.com/macros/s/XXXX/exec'
 let API_URL = DEFAULT_API_URL;
 
 /* ============================================================
