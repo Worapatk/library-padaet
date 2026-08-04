@@ -107,7 +107,18 @@
   @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
 
   .view-head{ margin-bottom:26px; }
-  .eyebrow{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--forest); background:var(--forest-tint); display:inline-block; padding:3px 10px; border-radius:6px; margin-bottom:10px;}
+  /* ---------- ธีมสีต่อหมวด (ใช้กับ eyebrow chip + พื้นหลังส่วนหัวของแต่ละหน้า) ---------- */
+  :root{ --accent:var(--forest); --accent-tint:var(--forest-tint); --accent-wash:transparent; }
+  #view-opac{ --accent:var(--forest); --accent-tint:var(--forest-tint); --accent-wash:var(--forest-tint); }
+  #view-reading{ --accent:#8A5E00; --accent-tint:var(--gold-tint); --accent-wash:var(--gold-tint); }
+  #view-stats{ --accent:#1E6E64; --accent-tint:#DCEEEA; --accent-wash:#DCEEEA; }
+  #view-links{ --accent:#2F5E7A; --accent-tint:#DCE9EF; --accent-wash:#DCE9EF; }
+  #view-auth{ --accent:#8A3E22; --accent-tint:#F3E1D6; --accent-wash:#F3E1D6; }
+  #view-admin{ --accent:#54506A; --accent-tint:#E5E3ED; --accent-wash:#E5E3ED; }
+
+  .view{ background-image: linear-gradient(180deg, var(--accent-wash) 0%, transparent 260px); }
+
+  .eyebrow{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); background:var(--accent-tint); display:inline-block; padding:3px 10px; border-radius:6px; margin-bottom:10px;}
 
   .card{ background:var(--paper-alt); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
   .pad{ padding:22px; }
@@ -214,11 +225,42 @@
 
   .hamburger{ display:none; }
   @media (max-width:860px){
-    nav.tabs{ display:none; position:absolute; top:100%; left:0; right:0; background:var(--forest-dark); flex-direction:column; padding:10px 20px 18px; box-shadow:0 8px 16px rgba(0,0,0,.2);}
-    nav.tabs.open{ display:flex; }
+    nav.tabs{ display:none !important; }
     .hamburger{ display:flex; }
     header.site{ position:relative; }
   }
+
+  /* ---------- เมนูการ์ดเต็มจอ (มือถือ) ---------- */
+  .mobile-menu-overlay{
+    position:fixed; inset:0; z-index:70; background:var(--forest-dark);
+    display:none; flex-direction:column; overflow-y:auto;
+    padding: calc(env(safe-area-inset-top) + 18px) 20px calc(env(safe-area-inset-bottom) + 24px);
+  }
+  .mobile-menu-overlay.show{ display:flex; }
+  .mobile-menu-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .mobile-menu-head .brand{ gap:10px; }
+  .mobile-menu-head h1{ color:#fff; font-size:1.05rem; margin:0; }
+  .mobile-menu-head .kicker{ color:var(--gold-tint); font-size:.68rem; }
+  .menu-card-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .menu-card{
+    background:var(--paper-alt); border:none; border-radius:16px; padding:20px 16px;
+    display:flex; flex-direction:column; align-items:flex-start; gap:8px; text-align:left;
+    box-shadow:0 4px 14px rgba(0,0,0,.18); position:relative; overflow:hidden;
+  }
+  .menu-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:5px; background:var(--card-accent); }
+  .menu-card-icon{
+    width:40px; height:40px; border-radius:11px; background:var(--card-accent-tint); color:var(--card-accent);
+    display:flex; align-items:center; justify-content:center; font-size:1.25rem;
+  }
+  .menu-card-title{ font-family:var(--font-display); font-weight:700; color:var(--forest-dark); font-size:.95rem; }
+  .menu-card-desc{ font-size:.72rem; color:var(--ink-soft); line-height:1.4; }
+  .menu-card.mc-opac{ --card-accent:var(--forest); --card-accent-tint:var(--forest-tint); }
+  .menu-card.mc-reading{ --card-accent:#8A5E00; --card-accent-tint:var(--gold-tint); }
+  .menu-card.mc-stats{ --card-accent:#1E6E64; --card-accent-tint:#DCEEEA; }
+  .menu-card.mc-links{ --card-accent:#2F5E7A; --card-accent-tint:#DCE9EF; }
+  .menu-card.mc-auth{ --card-accent:#8A3E22; --card-accent-tint:#F3E1D6; }
+  .menu-card.mc-admin{ --card-accent:#54506A; --card-accent-tint:#E5E3ED; }
+  .mobile-menu-footer{ margin-top:auto; padding-top:24px; text-align:center; color:#8AA090; font-size:.72rem; }
 </style>
 </head>
 <body>
@@ -232,7 +274,7 @@
         <h1>ห้องสมุดประชาชนอำเภอป่าแดด</h1>
       </div>
     </div>
-    <button class="icon-btn hamburger" id="btnHamburger" aria-label="เมนู">☰</button>
+    <button class="icon-btn hamburger" id="btnHamburger" aria-label="เปิดเมนู">☰</button>
     <nav class="tabs" id="navTabs">
       <button data-view="opac" class="active">ค้นหาหนังสือ</button>
       <button data-view="reading">ส่งเสริมการอ่าน</button>
@@ -251,6 +293,53 @@
     <span class="dewey-800" style="background:var(--c)"></span><span class="dewey-900" style="background:var(--c)"></span>
   </div>
 </header>
+
+<!-- ===== เมนูการ์ดเต็มจอ (แสดงบนมือถือเมื่อกดปุ่ม ☰) ===== -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay">
+  <div class="mobile-menu-head">
+    <div class="brand">
+      <div class="brand-mark">ป</div>
+      <div class="brand-text">
+        <div class="kicker">เมนูหลัก</div>
+        <h1>ห้องสมุดประชาชนอำเภอป่าแดด</h1>
+      </div>
+    </div>
+    <button class="icon-btn" id="btnCloseMobileMenu" aria-label="ปิดเมนู">✕</button>
+  </div>
+  <div class="menu-card-grid">
+    <button class="menu-card mc-opac" data-view="opac">
+      <span class="menu-card-icon">🔍</span>
+      <span class="menu-card-title">ค้นหาหนังสือ</span>
+      <span class="menu-card-desc">สืบค้น OPAC ตามเลขหมู่ดิวอี้</span>
+    </button>
+    <button class="menu-card mc-reading" data-view="reading">
+      <span class="menu-card-icon">📖</span>
+      <span class="menu-card-title">ส่งเสริมการอ่าน</span>
+      <span class="menu-card-desc">บันทึกการอ่าน สะสมคะแนน</span>
+    </button>
+    <button class="menu-card mc-stats" data-view="stats">
+      <span class="menu-card-icon">📊</span>
+      <span class="menu-card-title">สถิติห้องสมุด</span>
+      <span class="menu-card-desc">ข้อมูลเปิดเผยต่อสาธารณะ</span>
+    </button>
+    <button class="menu-card mc-links" data-view="links">
+      <span class="menu-card-icon">🔗</span>
+      <span class="menu-card-title">แหล่งเรียนรู้</span>
+      <span class="menu-card-desc">เครือข่ายการเรียนรู้ภายนอก</span>
+    </button>
+    <button class="menu-card mc-auth" data-view="auth" id="menuCardAuth">
+      <span class="menu-card-icon">👤</span>
+      <span class="menu-card-title" id="menuCardAuthTitle">เข้าสู่ระบบ</span>
+      <span class="menu-card-desc">สมัครสมาชิก / ดูโปรไฟล์</span>
+    </button>
+    <button class="menu-card mc-admin" data-view="admin" id="menuCardAdmin" style="display:none;">
+      <span class="menu-card-icon">🛠️</span>
+      <span class="menu-card-title">แอดมิน</span>
+      <span class="menu-card-desc">จัดการระบบหลังบ้าน</span>
+    </button>
+  </div>
+  <div class="mobile-menu-footer">เครือข่ายกรมส่งเสริมการเรียนรู้ (สกร.) · พ.ร.บ. ส่งเสริมการเรียนรู้ พ.ศ. 2566</div>
+</div>
 
 <div class="ios-install-tip" id="iosInstallTip" style="display:none;">
   <div class="shell" style="display:flex; align-items:center; gap:10px; padding:10px 20px; font-size:.85rem;">
@@ -571,7 +660,7 @@
    แก้ค่านี้เป็น Web App URL จริงของคุณ เมื่อนำไฟล์นี้ไปโฮสต์จริง
    (ผู้ใช้ยังสามารถเปลี่ยนชั่วคราวผ่านปุ่ม ⚙ ที่มุมขวาบนได้ด้วย)
    ============================================================ */
-let DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyIcbQtiPewSUtDZPYk8F68-B7IeboJ13KjZqeHNvPj_wsz-Dv_dR8O3hTSfE6gheT4/exec'; // <-- ใส่ Web App URL ตรงนี้ เช่น 'https://script.google.com/macros/s/XXXX/exec'
+let DEFAULT_API_URL = ''; // <-- ใส่ Web App URL ตรงนี้ เช่น 'https://script.google.com/macros/s/XXXX/exec'
 let API_URL = DEFAULT_API_URL;
 
 /* ============================================================
@@ -637,7 +726,7 @@ function switchView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
-  document.getElementById('navTabs').classList.remove('open');
+  closeMobileMenu();
   if(name==='opac') loadBooks();
   if(name==='reading') loadLeaderboard();
   if(name==='stats') loadStats();
@@ -647,8 +736,14 @@ function switchView(name){
 document.querySelectorAll('nav.tabs button[data-view]').forEach(btn=>{
   btn.addEventListener('click', ()=>switchView(btn.dataset.view));
 });
-document.getElementById('btnHamburger').addEventListener('click', ()=>{
-  document.getElementById('navTabs').classList.toggle('open');
+
+/* ---------- เมนูการ์ดเต็มจอ (มือถือ) ---------- */
+function openMobileMenu(){ document.getElementById('mobileMenuOverlay').classList.add('show'); }
+function closeMobileMenu(){ document.getElementById('mobileMenuOverlay').classList.remove('show'); }
+document.getElementById('btnHamburger').addEventListener('click', openMobileMenu);
+document.getElementById('btnCloseMobileMenu').addEventListener('click', closeMobileMenu);
+document.querySelectorAll('.menu-card[data-view]').forEach(card=>{
+  card.addEventListener('click', ()=>switchView(card.dataset.view));
 });
 
 /* ============================================================
@@ -908,6 +1003,8 @@ document.getElementById('btnLogout').addEventListener('click', ()=>{
   state.token=null; state.user=null;
   document.getElementById('navAdminBtn').style.display='none';
   document.getElementById('navAuthBtn').textContent='เข้าสู่ระบบ';
+  document.getElementById('menuCardAdmin').style.display='none';
+  document.getElementById('menuCardAuthTitle').textContent='เข้าสู่ระบบ';
   document.getElementById('authGuest').style.display='block';
   document.getElementById('authProfile').style.display='none';
 });
@@ -917,10 +1014,14 @@ function enterProfileView(){
   document.getElementById('authGuest').style.display='none';
   document.getElementById('authProfile').style.display='block';
   document.getElementById('navAuthBtn').textContent='โปรไฟล์ของฉัน';
+  document.getElementById('menuCardAuthTitle').textContent='โปรไฟล์ของฉัน';
   document.getElementById('profileInitial').textContent = (u.nickname||u.full_name||'?').charAt(0);
   document.getElementById('profileName').textContent = u.nickname || u.full_name;
   document.getElementById('profilePoints').textContent = `${u.total_points||0} คะแนน`;
-  if(u.role && u.role!=='member'){ document.getElementById('navAdminBtn').style.display='inline-flex'; }
+  if(u.role && u.role!=='member'){
+    document.getElementById('navAdminBtn').style.display='inline-flex';
+    document.getElementById('menuCardAdmin').style.display='flex';
+  }
   switchView('auth');
   loadProfileBundle();
 }
