@@ -12,8 +12,8 @@ const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
+  './icon/icon-192.png',
+  './icon/icon-512.png',
 ];
 
 // ติดตั้ง: ดาวน์โหลดเปลือกแอปเก็บไว้ในแคชล่วงหน้า
