@@ -109,6 +109,7 @@
   .view-head{ margin-bottom:26px; }
   /* ---------- ธีมสีต่อหมวด (ใช้กับ eyebrow chip + พื้นหลังส่วนหัวของแต่ละหน้า) ---------- */
   :root{ --accent:var(--forest); --accent-tint:var(--forest-tint); --accent-wash:transparent; }
+  #view-home{ --accent:var(--forest); --accent-tint:var(--forest-tint); --accent-wash:var(--forest-tint); }
   #view-opac{ --accent:var(--forest); --accent-tint:var(--forest-tint); --accent-wash:var(--forest-tint); }
   #view-reading{ --accent:#8A5E00; --accent-tint:var(--gold-tint); --accent-wash:var(--gold-tint); }
   #view-stats{ --accent:#1E6E64; --accent-tint:#DCEEEA; --accent-wash:#DCEEEA; }
@@ -223,60 +224,52 @@
 
   .ios-install-tip{ background:var(--gold-tint); color:#5C3E00; border-bottom:1px solid var(--gold); }
 
-  .hamburger{ display:none; }
   @media (max-width:860px){
     nav.tabs{ display:none !important; }
-    .hamburger{ display:flex; }
-    header.site{ position:relative; }
   }
 
-  /* ---------- เมนูการ์ดเต็มจอ (มือถือ) ---------- */
-  .mobile-menu-overlay{
-    position:fixed; inset:0; z-index:70; background:var(--forest-dark);
-    display:none; flex-direction:column; overflow-y:auto;
-    padding: calc(env(safe-area-inset-top) + 18px) 20px calc(env(safe-area-inset-bottom) + 24px);
-  }
-  .mobile-menu-overlay.show{ display:flex; }
-  .mobile-menu-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
-  .mobile-menu-head .brand{ gap:10px; }
-  .mobile-menu-head h1{ color:#fff; font-size:1.05rem; margin:0; }
-  .mobile-menu-head .kicker{ color:var(--gold-tint); font-size:.68rem; }
-  .menu-card-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  /* ---------- หน้าแรก: เมนูการ์ด ---------- */
+  .home-hero{ text-align:center; max-width:520px; margin:0 auto 30px; }
+  .home-hero .brand-mark{ width:56px; height:56px; font-size:1.7rem; margin:0 auto 16px; }
+  .menu-card-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; }
   .menu-card{
-    background:var(--paper-alt); border:none; border-radius:16px; padding:20px 16px;
-    display:flex; flex-direction:column; align-items:flex-start; gap:8px; text-align:left;
-    box-shadow:0 4px 14px rgba(0,0,0,.18); position:relative; overflow:hidden;
+    background:var(--paper-alt); border:1px solid var(--line); border-radius:16px; padding:22px 18px;
+    display:flex; flex-direction:column; align-items:flex-start; gap:9px; text-align:left;
+    box-shadow:var(--shadow); position:relative; overflow:hidden; transition:transform .15s, box-shadow .15s;
   }
+  .menu-card:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(27,67,50,.14); }
   .menu-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:5px; background:var(--card-accent); }
   .menu-card-icon{
-    width:40px; height:40px; border-radius:11px; background:var(--card-accent-tint); color:var(--card-accent);
-    display:flex; align-items:center; justify-content:center; font-size:1.25rem;
+    width:44px; height:44px; border-radius:12px; background:var(--card-accent-tint); color:var(--card-accent);
+    display:flex; align-items:center; justify-content:center; font-size:1.35rem;
   }
-  .menu-card-title{ font-family:var(--font-display); font-weight:700; color:var(--forest-dark); font-size:.95rem; }
-  .menu-card-desc{ font-size:.72rem; color:var(--ink-soft); line-height:1.4; }
+  .menu-card-title{ font-family:var(--font-display); font-weight:700; color:var(--forest-dark); font-size:1rem; }
+  .menu-card-desc{ font-size:.78rem; color:var(--ink-soft); line-height:1.45; }
   .menu-card.mc-opac{ --card-accent:var(--forest); --card-accent-tint:var(--forest-tint); }
   .menu-card.mc-reading{ --card-accent:#8A5E00; --card-accent-tint:var(--gold-tint); }
   .menu-card.mc-stats{ --card-accent:#1E6E64; --card-accent-tint:#DCEEEA; }
   .menu-card.mc-links{ --card-accent:#2F5E7A; --card-accent-tint:#DCE9EF; }
   .menu-card.mc-auth{ --card-accent:#8A3E22; --card-accent-tint:#F3E1D6; }
   .menu-card.mc-admin{ --card-accent:#54506A; --card-accent-tint:#E5E3ED; }
-  .mobile-menu-footer{ margin-top:auto; padding-top:24px; text-align:center; color:#8AA090; font-size:.72rem; }
+
+  .back-home-link{ display:inline-flex; align-items:center; gap:6px; background:none; border:none; color:var(--forest); font-weight:600; font-size:.85rem; padding:0; margin-bottom:16px; }
+  .back-home-link:hover{ text-decoration:underline; }
 </style>
 </head>
 <body>
 
 <header class="site">
   <div class="shell topbar">
-    <div class="brand">
+    <button class="brand" id="btnGoHome" aria-label="กลับหน้าแรก" style="background:none; border:none; cursor:pointer; text-align:left; font:inherit; color:inherit; padding:0;">
       <div class="brand-mark">ป</div>
       <div class="brand-text">
         <div class="kicker">กรมส่งเสริมการเรียนรู้ · เรียนรู้ตลอดชีวิต</div>
         <h1>ห้องสมุดประชาชนอำเภอป่าแดด</h1>
       </div>
-    </div>
-    <button class="icon-btn hamburger" id="btnHamburger" aria-label="เปิดเมนู">☰</button>
+    </button>
     <nav class="tabs" id="navTabs">
-      <button data-view="opac" class="active">ค้นหาหนังสือ</button>
+      <button data-view="home" class="active">หน้าแรก</button>
+      <button data-view="opac">ค้นหาหนังสือ</button>
       <button data-view="reading">ส่งเสริมการอ่าน</button>
       <button data-view="stats">สถิติห้องสมุด</button>
       <button data-view="links">แหล่งเรียนรู้</button>
@@ -294,53 +287,6 @@
   </div>
 </header>
 
-<!-- ===== เมนูการ์ดเต็มจอ (แสดงบนมือถือเมื่อกดปุ่ม ☰) ===== -->
-<div class="mobile-menu-overlay" id="mobileMenuOverlay">
-  <div class="mobile-menu-head">
-    <div class="brand">
-      <div class="brand-mark">ป</div>
-      <div class="brand-text">
-        <div class="kicker">เมนูหลัก</div>
-        <h1>ห้องสมุดประชาชนอำเภอป่าแดด</h1>
-      </div>
-    </div>
-    <button class="icon-btn" id="btnCloseMobileMenu" aria-label="ปิดเมนู">✕</button>
-  </div>
-  <div class="menu-card-grid">
-    <button class="menu-card mc-opac" data-view="opac">
-      <span class="menu-card-icon">🔍</span>
-      <span class="menu-card-title">ค้นหาหนังสือ</span>
-      <span class="menu-card-desc">สืบค้น OPAC ตามเลขหมู่ดิวอี้</span>
-    </button>
-    <button class="menu-card mc-reading" data-view="reading">
-      <span class="menu-card-icon">📖</span>
-      <span class="menu-card-title">ส่งเสริมการอ่าน</span>
-      <span class="menu-card-desc">บันทึกการอ่าน สะสมคะแนน</span>
-    </button>
-    <button class="menu-card mc-stats" data-view="stats">
-      <span class="menu-card-icon">📊</span>
-      <span class="menu-card-title">สถิติห้องสมุด</span>
-      <span class="menu-card-desc">ข้อมูลเปิดเผยต่อสาธารณะ</span>
-    </button>
-    <button class="menu-card mc-links" data-view="links">
-      <span class="menu-card-icon">🔗</span>
-      <span class="menu-card-title">แหล่งเรียนรู้</span>
-      <span class="menu-card-desc">เครือข่ายการเรียนรู้ภายนอก</span>
-    </button>
-    <button class="menu-card mc-auth" data-view="auth" id="menuCardAuth">
-      <span class="menu-card-icon">👤</span>
-      <span class="menu-card-title" id="menuCardAuthTitle">เข้าสู่ระบบ</span>
-      <span class="menu-card-desc">สมัครสมาชิก / ดูโปรไฟล์</span>
-    </button>
-    <button class="menu-card mc-admin" data-view="admin" id="menuCardAdmin" style="display:none;">
-      <span class="menu-card-icon">🛠️</span>
-      <span class="menu-card-title">แอดมิน</span>
-      <span class="menu-card-desc">จัดการระบบหลังบ้าน</span>
-    </button>
-  </div>
-  <div class="mobile-menu-footer">เครือข่ายกรมส่งเสริมการเรียนรู้ (สกร.) · พ.ร.บ. ส่งเสริมการเรียนรู้ พ.ศ. 2566</div>
-</div>
-
 <div class="ios-install-tip" id="iosInstallTip" style="display:none;">
   <div class="shell" style="display:flex; align-items:center; gap:10px; padding:10px 20px; font-size:.85rem;">
     <span>📱 ติดตั้งแอปนี้บนไอโฟน: แตะปุ่ม แชร์ <strong>⬆️</strong> ด้านล่าง แล้วเลือก <strong>"เพิ่มลงในหน้าจอโฮม"</strong></span>
@@ -350,8 +296,51 @@
 
 <main class="shell">
 
+  <!-- ========== หน้าแรก: เมนูการ์ด ========== -->
+  <section class="view active" id="view-home">
+    <div class="home-hero">
+      <div class="brand-mark">ป</div>
+      <div class="eyebrow">กรมส่งเสริมการเรียนรู้ · เรียนรู้ตลอดชีวิต</div>
+      <h1 style="margin-bottom:6px;">ห้องสมุดประชาชนอำเภอป่าแดด</h1>
+      <p>เลือกบริการที่ต้องการใช้งานได้จากเมนูด้านล่าง</p>
+    </div>
+    <div class="menu-card-grid">
+      <button class="menu-card mc-opac" data-view="opac">
+        <span class="menu-card-icon">🔍</span>
+        <span class="menu-card-title">ค้นหาหนังสือ</span>
+        <span class="menu-card-desc">สืบค้น OPAC ตามเลขหมู่ดิวอี้</span>
+      </button>
+      <button class="menu-card mc-reading" data-view="reading">
+        <span class="menu-card-icon">📖</span>
+        <span class="menu-card-title">ส่งเสริมการอ่าน</span>
+        <span class="menu-card-desc">บันทึกการอ่าน สะสมคะแนน</span>
+      </button>
+      <button class="menu-card mc-stats" data-view="stats">
+        <span class="menu-card-icon">📊</span>
+        <span class="menu-card-title">สถิติห้องสมุด</span>
+        <span class="menu-card-desc">ข้อมูลเปิดเผยต่อสาธารณะ</span>
+      </button>
+      <button class="menu-card mc-links" data-view="links">
+        <span class="menu-card-icon">🔗</span>
+        <span class="menu-card-title">แหล่งเรียนรู้</span>
+        <span class="menu-card-desc">เครือข่ายการเรียนรู้ภายนอก</span>
+      </button>
+      <button class="menu-card mc-auth" data-view="auth" id="menuCardAuth">
+        <span class="menu-card-icon">👤</span>
+        <span class="menu-card-title" id="menuCardAuthTitle">เข้าสู่ระบบ</span>
+        <span class="menu-card-desc">สมัครสมาชิก / ดูโปรไฟล์</span>
+      </button>
+      <button class="menu-card mc-admin" data-view="admin" id="menuCardAdmin" style="display:none;">
+        <span class="menu-card-icon">🛠️</span>
+        <span class="menu-card-title">แอดมิน</span>
+        <span class="menu-card-desc">จัดการระบบหลังบ้าน</span>
+      </button>
+    </div>
+  </section>
+
   <!-- ========== OPAC: ค้นหาหนังสือ ========== -->
-  <section class="view active" id="view-opac">
+  <section class="view" id="view-opac">
+    <button class="back-home-link" data-view="home">← เมนูหลัก</button>
     <div class="view-head">
       <div class="eyebrow">OPAC · ระบบสืบค้นสาธารณะ</div>
       <h2>ค้นหาหนังสือในห้องสมุด</h2>
@@ -378,6 +367,7 @@
 
   <!-- ========== ส่งเสริมการอ่าน ========== -->
   <section class="view" id="view-reading">
+    <button class="back-home-link" data-view="home">← เมนูหลัก</button>
     <div class="view-head">
       <div class="eyebrow">Reading Promotion · เรียนรู้ตลอดชีวิต</div>
       <h2>ส่งเสริมการอ่าน &amp; นักอ่านยอดเยี่ยม</h2>
@@ -405,6 +395,7 @@
 
   <!-- ========== สถิติ ========== -->
   <section class="view" id="view-stats">
+    <button class="back-home-link" data-view="home">← เมนูหลัก</button>
     <div class="view-head">
       <div class="eyebrow">Public Dashboard · ข้อมูลเปิดเผยต่อสาธารณะ</div>
       <h2>สถิติห้องสมุดวันนี้</h2>
@@ -428,6 +419,7 @@
 
   <!-- ========== ลิงก์แหล่งเรียนรู้ ========== -->
   <section class="view" id="view-links">
+    <button class="back-home-link" data-view="home">← เมนูหลัก</button>
     <div class="view-head">
       <div class="eyebrow">Learning Network</div>
       <h2>แหล่งเรียนรู้ภายนอก</h2>
@@ -438,6 +430,7 @@
 
   <!-- ========== เข้าสู่ระบบ / โปรไฟล์ ========== -->
   <section class="view" id="view-auth">
+    <button class="back-home-link" data-view="home">← เมนูหลัก</button>
 
     <div id="authGuest" class="auth-wrap">
       <div class="view-head" style="text-align:center;">
@@ -507,6 +500,7 @@
 
   <!-- ========== แอดมิน (แสดงเฉพาะ role admin/librarian) ========== -->
   <section class="view" id="view-admin">
+    <button class="back-home-link" data-view="home">← เมนูหลัก</button>
     <div class="view-head">
       <div class="eyebrow">Back Office</div>
       <h2>ระบบบริหารจัดการหลังบ้าน</h2>
@@ -726,7 +720,7 @@ function switchView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
-  closeMobileMenu();
+  window.scrollTo({top:0, behavior:'instant'});
   if(name==='opac') loadBooks();
   if(name==='reading') loadLeaderboard();
   if(name==='stats') loadStats();
@@ -736,15 +730,14 @@ function switchView(name){
 document.querySelectorAll('nav.tabs button[data-view]').forEach(btn=>{
   btn.addEventListener('click', ()=>switchView(btn.dataset.view));
 });
-
-/* ---------- เมนูการ์ดเต็มจอ (มือถือ) ---------- */
-function openMobileMenu(){ document.getElementById('mobileMenuOverlay').classList.add('show'); }
-function closeMobileMenu(){ document.getElementById('mobileMenuOverlay').classList.remove('show'); }
-document.getElementById('btnHamburger').addEventListener('click', openMobileMenu);
-document.getElementById('btnCloseMobileMenu').addEventListener('click', closeMobileMenu);
 document.querySelectorAll('.menu-card[data-view]').forEach(card=>{
   card.addEventListener('click', ()=>switchView(card.dataset.view));
 });
+document.querySelectorAll('.back-home-link[data-view]').forEach(btn=>{
+  btn.addEventListener('click', ()=>switchView(btn.dataset.view));
+});
+document.getElementById('btnGoHome').addEventListener('click', ()=>switchView('home'));
+
 
 /* ============================================================
    OPAC: ค้นหาหนังสือ
@@ -1386,7 +1379,6 @@ document.getElementById('closeIosTip').addEventListener('click', ()=>{
    INITIAL LOAD
    ============================================================ */
 if(!API_URL){ setTimeout(showNoApiWarning, 400); }
-loadBooks();
 </script>
 
 </body>
